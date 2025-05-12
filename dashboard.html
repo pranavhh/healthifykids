@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Parental Dashboard – Healthify Kids</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="nutrition.html">Nutrition Tracker</a>
+    <a href="exercise.html">Exercise Tracker</a>
+    <a href="facts.html">Health Facts</a>
+    <a href="dashboard.html">Parental Dashboard</a>
+    <a href="forum.html">Community Forum</a>
+  </nav>
+  <div class="content" id="dashboardContent">
+    <!-- Content is loaded by JavaScript based on login status -->
+  </div>
+  <script>
+    const correctPassword = "parent123";
+
+    function showDashboard() {
+      const meals = JSON.parse(localStorage.getItem("meals")) || [];
+      const exercises = JSON.parse(localStorage.getItem("exercises")) || [];
+      let html = "<h2>Parental Dashboard</h2>";
+      html += "<h3>Nutrition Logs</h3>";
+      if (meals.length === 0) {
+        html += "<p>No meals logged yet.</p>";
+      } else {
+        html += "<ul>";
+        meals.forEach(meal => {
+          html += `<li>${meal}</li>`;
+        });
+        html += "</ul>";
+      }
+      html += "<h3>Exercise Logs</h3>";
+      if (exercises.length === 0) {
+        html += "<p>No exercises logged yet.</p>";
+      } else {
+        html += "<ul>";
+        exercises.forEach(item => {
+          html += `<li>${item.exercise} at ${item.date}</li>`;
+        });
+        html += "</ul>";
+      }
+      document.getElementById("dashboardContent").innerHTML = html;
+    }
+
+    function showLogin() {
+      document.getElementById("dashboardContent").innerHTML = `
+        <h2>Parental Dashboard Login</h2>
+        <input type="password" id="passwordInput" placeholder="Enter Password" />
+        <button onclick="login()">Login</button>
+      `;
+    }
+
+    function login() {
+      const password = document.getElementById("passwordInput").value;
+      if (password === correctPassword) {
+        // Optionally store a login flag for the session
+        sessionStorage.setItem("loggedIn", "true");
+        showDashboard();
+      } else {
+        alert("Incorrect password");
+      }
+    }
+
+    window.onload = () => {
+      if (sessionStorage.getItem("loggedIn") === "true") {
+        showDashboard();
+      } else {
+        showLogin();
+      }
+    };
+  </script>
+</body>
+</html>
